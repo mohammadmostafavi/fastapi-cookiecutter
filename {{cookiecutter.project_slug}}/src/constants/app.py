@@ -6,9 +6,9 @@ Application-wide constants.
 This module contains constants used throughout the application.
 """
 # Application metadata
-APP_NAME = {{cookiecutter.project_name}}
+APP_NAME = "{{cookiecutter.project_name}}"
 APP_VERSION = "0.1.0"
-APP_DESCRIPTION = {{cookiecutter.project_description}}
+APP_DESCRIPTION = "{{cookiecutter.project_description}}"
 
 # Debug settings
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
