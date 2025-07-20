@@ -7,8 +7,6 @@ services:
       - db
       - redis
     image: myapp:latest
-    volumes:
-      - ./certs:/app/certs
     networks:
       - {{cookiecutter.project_slug}}_network
     ports:
@@ -64,8 +62,6 @@ services:
       - redis
       - app
     image: myapp:latest
-    volumes:
-      - ./certs:/app/certs
     networks:
       - {{cookiecutter.project_slug}}_network
     environment:
@@ -99,8 +95,6 @@ services:
       - app
       - celery_worker
     image: myapp:latest
-    volumes:
-      - ./certs:/app/certs
     networks:
       - {{cookiecutter.project_slug}}_network
     environment:
@@ -133,8 +127,6 @@ services:
       - redis
       - celery_worker
     image: myapp:latest
-    volumes:
-      - ./certs:/app/certs
     networks:
       - {{cookiecutter.project_slug}}_network
     ports:
