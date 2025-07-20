@@ -158,7 +158,7 @@ services:
       - {{cookiecutter.project_slug}}_network
 
 
-  {%- if cookiecutter.database_type == "MySQL" -%}
+  {% if cookiecutter.database_type == "MySQL" %}
   db:
     image: mariadb:latest
     environment:
@@ -173,7 +173,7 @@ services:
     networks:
         - {{cookiecutter.project_slug}}_network
 
-  {%- elif cookiecutter.database_type == "PostgreSQL" -%}
+  {% elif cookiecutter.database_type == "PostgreSQL" %}
   db:
     image: postgres:latest
     environment:
@@ -186,7 +186,7 @@ services:
       - "5445:5432"
     networks:
       - {{cookiecutter.project_slug}}_network
-  {%- endif -%}
+  {% endif %}
 
 
 volumes:
