@@ -15,17 +15,15 @@ services:
       - "8000:8000"
     environment:
       - DEBUG=True
-
-      {%- if cookiecutter.database_type == "PostgreSQL" -%}
+      {% if cookiecutter.database_type == "PostgreSQL" %}
       - DB_URL=postgresql+asyncpg://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
-      {%- elif cookiecutter.database_type == "SQLite" -%}
+      {% elif cookiecutter.database_type == "SQLite" %}
       - DB_URL=sqlite+aiosqlite:///./src/db.sqlite3
-      {%- elif cookiecutter.database_type == "MySQL" -%}
+      {% elif cookiecutter.database_type == "MySQL" %}
       - DB_URL=mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
-      {%- elif cookiecutter.database_type == "Oracle" -%}
+      {% elif cookiecutter.database_type == "Oracle" %}
       - DB_URL=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
-      {%- endif -%}
-
+      {% endif %}
       - SECRET_KEY=your_secret_key
       - CELERY_BROKER_URL=redis://redis:6379/0
       - REDIS_URL=redis://redis:6379/0
@@ -48,30 +46,26 @@ services:
       - {{cookiecutter.project_slug}}_network
     environment:
       - DEBUG=True
-
-      {%- if cookiecutter.database_type == "PostgreSQL" -%}
+      {% if cookiecutter.database_type == "PostgreSQL" %}
       - DB_URL=postgresql+asyncpg://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
-      {%- elif cookiecutter.database_type == "SQLite" -%}
+      {% elif cookiecutter.database_type == "SQLite" %}
       - DB_URL=sqlite+aiosqlite:///./src/db.sqlite3
-      {%- elif cookiecutter.database_type == "MySQL" -%}
+      {% elif cookiecutter.database_type == "MySQL" %}
       - DB_URL=mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
-      {%- elif cookiecutter.database_type == "Oracle" -%}
+      {% elif cookiecutter.database_type == "Oracle" %}
       - DB_URL=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
-      {%- endif -%}
-
+      {% endif %}
       - SECRET_KEY=your_secret_key
       - CELERY_BROKER_URL=redis://redis:6379/0
-
-      {%- if cookiecutter.database_type == "PostgreSQL" -%}
+      {% if cookiecutter.database_type == "PostgreSQL" %}
       - CELERY_RESULT_BACKEND=db+postgresql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
-      {%- elif cookiecutter.database_type == "SQLite" -%}
+      {% elif cookiecutter.database_type == "SQLite" %}
       - CELERY_RESULT_BACKEND=sqlite+aiosqlite:///./src/db.sqlite3
-      {%- elif cookiecutter.database_type == "MySQL" -%}
+      {% elif cookiecutter.database_type == "MySQL" %}
       - CELERY_RESULT_BACKEND=mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
-      {%- elif cookiecutter.database_type == "Oracle" -%}
+      {% elif cookiecutter.database_type == "Oracle" %}
       - CELERY_RESULT_BACKEND=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
-      {%- endif -%}
-
+      {% endif %}
       - CELERY_TASK_ALWAYS_EAGER=true
       - CELERY_TASK_EAGER_PROPAGATES_EXCEPTIONS=true
       - REDIS_URL=redis://redis:6379/0
@@ -91,30 +85,26 @@ services:
       - {{cookiecutter.project_slug}}_network
     environment:
       - DEBUG=True
-
-      {%- if cookiecutter.database_type == "PostgreSQL" -%}
+      {% if cookiecutter.database_type == "PostgreSQL" %}
       - DB_URL=postgresql+asyncpg://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
-      {%- elif cookiecutter.database_type == "SQLite" -%}
+      {% elif cookiecutter.database_type == "SQLite" %}
       - DB_URL=sqlite+aiosqlite:///./src/db.sqlite3
-      {%- elif cookiecutter.database_type == "MySQL" -%}
+      {% elif cookiecutter.database_type == "MySQL" %}
       - DB_URL=mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
-      {%- elif cookiecutter.database_type == "Oracle" -%}
+      {% elif cookiecutter.database_type == "Oracle" %}
       - DB_URL=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
-      {%- endif -%}
-
+      {% endif %}
       - SECRET_KEY=your_secret_key
       - CELERY_BROKER_URL=redis://redis:6379/0
-
-      {%- if cookiecutter.database_type == "PostgreSQL" -%}
+      {% if cookiecutter.database_type == "PostgreSQL" %}
       - CELERY_RESULT_BACKEND=db+postgresql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
-      {%- elif cookiecutter.database_type == "SQLite" -%}
+      {% elif cookiecutter.database_type == "SQLite" %}
       - CELERY_RESULT_BACKEND=sqlite+aiosqlite:///./src/db.sqlite3
-      {%- elif cookiecutter.database_type == "MySQL" -%}
+      {% elif cookiecutter.database_type == "MySQL" %}
       - CELERY_RESULT_BACKEND=mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
-      {%- elif cookiecutter.database_type == "Oracle" -%}
+      {% elif cookiecutter.database_type == "Oracle" %}
       - CELERY_RESULT_BACKEND=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
-      {%- endif -%}
-
+      {% endif %}
       - CELERY_TASK_ALWAYS_EAGER=true
       - CELERY_TASK_EAGER_PROPAGATES_EXCEPTIONS=true
       - REDIS_URL=redis://redis:6379/0
@@ -136,17 +126,15 @@ services:
     environment:
       - DEBUG=True
       - CELERY_BROKER_URL=redis://redis:6379/0
-
-      {%- if cookiecutter.database_type == "PostgreSQL" -%}
+      {% if cookiecutter.database_type == "PostgreSQL" %}
       - CELERY_RESULT_BACKEND=db+postgresql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
-      {%- elif cookiecutter.database_type == "SQLite" -%}
+      {% elif cookiecutter.database_type == "SQLite" %}
       - CELERY_RESULT_BACKEND=sqlite+aiosqlite:///./src/db.sqlite3
-      {%- elif cookiecutter.database_type == "MySQL" -%}
+      {% elif cookiecutter.database_type == "MySQL" %}
       - CELERY_RESULT_BACKEND=mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
-      {%- elif cookiecutter.database_type == "Oracle" -%}
+      {% elif cookiecutter.database_type == "Oracle" %}
       - CELERY_RESULT_BACKEND=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
-      {%- endif -%}
-
+      {% endif %}
       - CELERY_TASK_ALWAYS_EAGER=true
       - CELERY_TASK_EAGER_PROPAGATES_EXCEPTIONS=true
     command: celery -A src.celery:celery_app flower --port=5555
