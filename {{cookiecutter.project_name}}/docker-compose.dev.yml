@@ -1,0 +1,186 @@
+services:
+  {{cookiecutter.project_slug}}:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    depends_on:
+      - db
+      - redis
+    image: myapp:dev
+    volumes:
+      - .:/app
+    networks:
+      - {{cookiecutter.project_slug}}_network
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      { %- if cookiecutter.database_type == "PostgreSQL" -% }
+      - DB_URL=postgresql+asyncpg://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
+      { % elif cookiecutter.database_type == "SQLite" -% }
+      - DB_URL=sqlite+aiosqlite:///./src/db.sqlite3
+      { % elif cookiecutter.database_type == "MySQL" -% }
+      - DB_URL=mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
+      { % elif cookiecutter.database_type == "Oracle" -% }
+      - DB_URL=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
+      { % endif % }
+      - SECRET_KEY=your_secret_key
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - REDIS_URL=redis://redis:6379/0
+    command: >
+        bash -c "
+          alembic upgrade head &&
+          uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+        "
+  celery_worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    depends_on:
+      - redis
+      - app
+    image: myapp:dev
+    volumes:
+      - .:/app
+    networks:
+      - {{cookiecutter.project_slug}}_network
+    environment:
+      - DEBUG=True
+      { %- if cookiecutter.database_type == "PostgreSQL" -% }
+      - DB_URL=postgresql+asyncpg://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
+      { % elif cookiecutter.database_type == "SQLite" -% }
+      - DB_URL=sqlite+aiosqlite:///./src/db.sqlite3
+      { % elif cookiecutter.database_type == "MySQL" -% }
+      - DB_URL=mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
+      { % elif cookiecutter.database_type == "Oracle" -% }
+      - DB_URL=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
+      { % endif % }
+      - SECRET_KEY=your_secret_key
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      {% if cookiecutter.database_type == "PostgreSQL" -% }
+      - CELERY_RESULT_BACKEND=db+postgresql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
+      {% elif cookiecutter.database_type == "SQLite" -% }
+      - CELERY_RESULT_BACKEND=sqlite+aiosqlite:///./src/db.sqlite3
+      {% elif cookiecutter.database_type == "MySQL" -% }
+      - CELERY_RESULT_BACKEND=mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
+      {% elif cookiecutter.database_type == "Oracle" -% }
+      - CELERY_RESULT_BACKEND=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
+      { % endif %}
+      - CELERY_TASK_ALWAYS_EAGER=true
+      - CELERY_TASK_EAGER_PROPAGATES_EXCEPTIONS=true
+      - REDIS_URL=redis://redis:6379/0
+    command: celery -A src.celery:celery_app worker --loglevel=info
+  celery_beat:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    depends_on:
+      - redis
+      - app
+      - celery_worker
+    image: myapp:dev
+    volumes:
+      - .:/app
+    networks:
+      - {{cookiecutter.project_slug}}_network
+    environment:
+      - DEBUG=True
+      { %- if cookiecutter.database_type == "PostgreSQL" -% }
+      - DB_URL=postgresql+asyncpg://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
+      { % elif cookiecutter.database_type == "SQLite" -% }
+      - DB_URL=sqlite+aiosqlite:///./src/db.sqlite3
+      { % elif cookiecutter.database_type == "MySQL" -% }
+      - DB_URL=mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
+      { % elif cookiecutter.database_type == "Oracle" -% }
+      - DB_URL=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
+      { % endif % }
+      - SECRET_KEY=your_secret_key
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      { % if cookiecutter.database_type == "PostgreSQL" -% }
+      - CELERY_RESULT_BACKEND=db+postgresql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
+      { % elif cookiecutter.database_type == "SQLite" -% }
+      - CELERY_RESULT_BACKEND=sqlite+aiosqlite:///./src/db.sqlite3
+      { % elif cookiecutter.database_type == "MySQL" -% }
+      - CELERY_RESULT_BACKEND=mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
+      { % elif cookiecutter.database_type == "Oracle" -% }
+      - CELERY_RESULT_BACKEND=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
+      { % endif % }}
+      - CELERY_TASK_ALWAYS_EAGER=true
+      - CELERY_TASK_EAGER_PROPAGATES_EXCEPTIONS=true
+      - REDIS_URL=redis://redis:6379/0
+    command: celery -A src.celery:celery_app beat --loglevel=info
+  flower:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    depends_on:
+      - redis
+      - celery_worker
+    image: myapp:dev
+    volumes:
+      - .:/app
+    networks:
+      - {{cookiecutter.project_slug}}_network
+    ports:
+      - "5555:5555"
+    environment:
+      - DEBUG=True
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      { % if cookiecutter.database_type == "PostgreSQL" -% }
+      - CELERY_RESULT_BACKEND=db+postgresql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
+      { % elif cookiecutter.database_type == "SQLite" -% }
+      - CELERY_RESULT_BACKEND=sqlite+aiosqlite:///./src/db.sqlite3
+      { % elif cookiecutter.database_type == "MySQL" -% }
+      - CELERY_RESULT_BACKEND=mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
+      { % elif cookiecutter.database_type == "Oracle" -% }
+      - CELERY_RESULT_BACKEND=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
+      { % endif % }
+      - CELERY_TASK_ALWAYS_EAGER=true
+      - CELERY_TASK_EAGER_PROPAGATES_EXCEPTIONS=true
+    command: celery -A src.celery:celery_app flower --port=5555
+  redis:
+    image: redis:latest
+    volumes:
+      - redis_data:/data
+    networks:
+      - {{cookiecutter.project_slug}}_network
+  {% if cookiecutter.database_type == "MySQL" -% }
+  db:
+    image: mariadb:latest
+    environment:
+      MYSQL_DATABASE: {{cookiecutter.project_slug}}
+      MYSQL_USER: {{cookiecutter.database_user}}
+      MYSQL_PASSWORD: {{cookiecutter.database_password}}
+      MYSQL_ROOT_PASSWORD: {{cookiecutter.database_password}}
+    volumes:
+        - db_data:/var/lib/mysql
+    ports:
+        - "3306:3306"
+    networks:
+        - {{cookiecutter.project_slug}}_network
+
+  {% elif cookiecutter.database_type == "PostgreSQL" -% }
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: {{cookiecutter.project_slug}}
+      POSTGRES_USER: {{cookiecutter.database_user}}
+      POSTGRES_PASSWORD: {{cookiecutter.database_password}}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5445:5432"
+    networks:
+      - {{cookiecutter.project_slug}}_network
+  {% endif %}
+
+
+volumes:
+  db_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  {{cookiecutter.project_slug}}_network:
+    driver: bridge

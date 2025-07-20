@@ -1,0 +1,10 @@
+FROM python:3.13
+LABEL authors="mohammad"
+LABEL description="A simple Python application with fastapi and uvicorn"
+LABEL version="1.0"
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+EXPOSE 8000

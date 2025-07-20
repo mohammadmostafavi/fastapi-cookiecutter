@@ -1,0 +1,21 @@
+{
+  "project_name": "MyProject",
+  "project_description": "A brief description of my project.",
+  "project_slug": "{{ cookiecutter.project_name|lower|replace(' ', '_') }}",
+  "first_name": "Mohammad",
+  "last_name": "Mostafavi",
+  "license": [
+    "MIT",
+    "BEER",
+    "None"
+  ],
+  "database_type": [
+    "PostgreSQL",
+    "MySQL",
+    "SQLite",
+    "Oracle"
+  ],
+  "database_user": "user",
+  "database_password": "password"
+
+}
