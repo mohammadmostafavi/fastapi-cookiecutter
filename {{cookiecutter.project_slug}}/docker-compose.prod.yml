@@ -6,7 +6,7 @@ services:
     depends_on:
       - db
       - redis
-    image: myapp:latest
+    image: {{cookiecutter.project_slug}}:latest
     networks:
       - {{cookiecutter.project_slug}}_network
     ports:
@@ -61,7 +61,7 @@ services:
     depends_on:
       - redis
       - {{cookiecutter.project_slug}}
-    image: myapp:latest
+    image: {{cookiecutter.project_slug}}:latest
     networks:
       - {{cookiecutter.project_slug}}_network
     environment:
@@ -94,7 +94,7 @@ services:
       - redis
       - {{cookiecutter.project_slug}}
       - celery_worker
-    image: myapp:latest
+    image: {{cookiecutter.project_slug}}:latest
     networks:
       - {{cookiecutter.project_slug}}_network
     environment:
@@ -126,7 +126,7 @@ services:
     depends_on:
       - redis
       - celery_worker
-    image: myapp:latest
+    image: {{cookiecutter.project_slug}}:latest
     networks:
       - {{cookiecutter.project_slug}}_network
     ports:

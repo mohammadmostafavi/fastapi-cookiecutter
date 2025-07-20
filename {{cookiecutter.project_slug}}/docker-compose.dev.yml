@@ -6,9 +6,9 @@ services:
     depends_on:
       - db
       - redis
-    image: myapp:dev
+    image: {{cookiecutter.project_slug}}:dev
     volumes:
-      - .:/app
+      - .:/{{cookiecutter.project_slug}}
     networks:
       - {{cookiecutter.project_slug}}_network
     ports:
@@ -36,10 +36,10 @@ services:
       dockerfile: docker/Dockerfile.dev
     depends_on:
       - redis
-      - app
-    image: myapp:dev
+      - {{cookiecutter.project_slug}}
+    image: {{cookiecutter.project_slug}}:dev
     volumes:
-      - .:/app
+      - .:/{{cookiecutter.project_slug}}
     networks:
       - {{cookiecutter.project_slug}}_network
     environment:
@@ -70,11 +70,11 @@ services:
       dockerfile: docker/Dockerfile.dev
     depends_on:
       - redis
-      - app
+      - {{cookiecutter.project_slug}}
       - celery_worker
-    image: myapp:dev
+    image: {{cookiecutter.project_slug}}:dev
     volumes:
-      - .:/app
+      - .:/{{cookiecutter.project_slug}}
     networks:
       - {{cookiecutter.project_slug}}_network
     environment:
@@ -106,9 +106,9 @@ services:
     depends_on:
       - redis
       - celery_worker
-    image: myapp:dev
+    image: {{cookiecutter.project_slug}}:dev
     volumes:
-      - .:/app
+      - .:/{{cookiecutter.project_slug}}
     networks:
       - {{cookiecutter.project_slug}}_network
     ports:
