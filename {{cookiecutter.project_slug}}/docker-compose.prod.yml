@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: docker/Dockerfile
     depends_on:
-      - db
+      {% if cookiecutter.database_type == "PostgreSQL" or cookiecutter.database_type == "MySQL" %}- db{% endif %}
       - redis
     image: {{cookiecutter.project_slug}}:latest
     networks:
