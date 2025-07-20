@@ -60,7 +60,7 @@ services:
       dockerfile: docker/Dockerfile
     depends_on:
       - redis
-      - app
+      - {{cookiecutter.project_slug}}
     image: myapp:latest
     networks:
       - {{cookiecutter.project_slug}}_network
@@ -92,7 +92,7 @@ services:
       dockerfile: docker/Dockerfile
     depends_on:
       - redis
-      - app
+      - {{cookiecutter.project_slug}}
       - celery_worker
     image: myapp:latest
     networks:
