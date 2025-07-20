@@ -11,4 +11,7 @@ setup the project
 ```
 cookiecutter https://github.com/mohammadmostafavi/fastapi-cookiecutter.git
 ```
-
+or
+```
+python3 -m cookiecutter https://github.com/mohammadmostafavi/fastapi-cookiecutter.git
+```
