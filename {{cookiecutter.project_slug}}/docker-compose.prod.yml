@@ -23,13 +23,13 @@ services:
       {% endif %}- SECRET_KEY=${SECRET_KEY}
       - OAUTH_TOKEN_SECRET=${OAUTH_TOKEN_SECRET}
       - CELERY_BROKER_URL=redis://redis:6379/0{% if cookiecutter.database_type == "PostgreSQL" %}
-      - CELERY_RESULT_BACKEND=db+postgresql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
+      - CELERY_RESULT_BACKEND=db+postgresql+asyncpg://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
       {% elif cookiecutter.database_type == "SQLite" %}
-      - CELERY_RESULT_BACKEND=sqlite+aiosqlite:///./src/db.sqlite3
+      - CELERY_RESULT_BACKEND=db+sqlite+aiosqlite:///./src/db.sqlite3
       {% elif cookiecutter.database_type == "MySQL" %}
-      - CELERY_RESULT_BACKEND=mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
+      - CELERY_RESULT_BACKEND=db+mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
       {% elif cookiecutter.database_type == "Oracle" %}
-      - CELERY_RESULT_BACKEND=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
+      - CELERY_RESULT_BACKEND=db+oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
       {% endif %}- REDIS_URL=redis://redis:6379/0
       # CORS settings
       - CORS_ALLOW_ORIGINS=${CORS_ALLOW_ORIGINS}
@@ -76,13 +76,13 @@ services:
       {% endif %}- SECRET_KEY=${SECRET_KEY}
       - OAUTH_TOKEN_SECRET=${OAUTH_TOKEN_SECRET}
       - CELERY_BROKER_URL=redis://redis:6379/0{% if cookiecutter.database_type == "PostgreSQL" %}
-      - CELERY_RESULT_BACKEND=db+postgresql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
+      - CELERY_RESULT_BACKEND=db+postgresql+asyncpg://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
       {% elif cookiecutter.database_type == "SQLite" %}
-      - CELERY_RESULT_BACKEND=sqlite+aiosqlite:///./src/db.sqlite3
+      - CELERY_RESULT_BACKEND=db+sqlite+aiosqlite:///./src/db.sqlite3
       {% elif cookiecutter.database_type == "MySQL" %}
-      - CELERY_RESULT_BACKEND=mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
+      - CELERY_RESULT_BACKEND=db+mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
       {% elif cookiecutter.database_type == "Oracle" %}
-      - CELERY_RESULT_BACKEND=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
+      - CELERY_RESULT_BACKEND=db+oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
       {% endif %}- REDIS_URL=redis://redis:6379/0
     command: celery -A src.celery:celery_app worker --loglevel=info
     restart: unless-stopped
@@ -109,13 +109,13 @@ services:
       {% endif %}- SECRET_KEY=${SECRET_KEY}
       - OAUTH_TOKEN_SECRET=${OAUTH_TOKEN_SECRET}
       - CELERY_BROKER_URL=redis://redis:6379/0{% if cookiecutter.database_type == "PostgreSQL" %}
-      - CELERY_RESULT_BACKEND=db+postgresql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
+      - CELERY_RESULT_BACKEND=db+postgresql+asyncpg://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
       {% elif cookiecutter.database_type == "SQLite" %}
-      - CELERY_RESULT_BACKEND=sqlite+aiosqlite:///./src/db.sqlite3
+      - CELERY_RESULT_BACKEND=db+sqlite+aiosqlite:///./src/db.sqlite3
       {% elif cookiecutter.database_type == "MySQL" %}
-      - CELERY_RESULT_BACKEND=mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
+      - CELERY_RESULT_BACKEND=db+mysql+aiomysql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:3306/{{cookiecutter.project_slug}}
       {% elif cookiecutter.database_type == "Oracle" %}
-      - CELERY_RESULT_BACKEND=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
+      - CELERY_RESULT_BACKEND=db+oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
       {% endif %}- REDIS_URL=redis://redis:6379/0
     command: celery -A src.celery:celery_app beat --loglevel=info
     restart: unless-stopped
