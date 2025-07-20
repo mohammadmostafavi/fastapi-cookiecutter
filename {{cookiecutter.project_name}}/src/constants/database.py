@@ -6,12 +6,6 @@ This module contains constants related to database configuration and operations.
 
 import os
 
-# Default database URLs for different database engines
-DEFAULT_POSTGRESQL_URL = "postgresql+asyncpg://user:password@localhost:5432/mydb"
-DEFAULT_MYSQL_URL = "mysql+aiomysql://user:password@localhost:3306/mydb"
-DEFAULT_ORACLE_URL = "oracle+oracledb://user:password@localhost:1521/service"
-DEFAULT_SQLITE_URL = "sqlite+aiosqlite:///./src.db"
-
 DB_URL = os.getenv("DB_URL", "postgresql+asyncpg://user:password@localhost:5432/mydb")
 
 # Database connection pool settings
