@@ -1,6 +1,6 @@
 FROM python:3.13
 LABEL authors="mohammad"
-LABEL description={{cookiecutter.project_description}}
+LABEL description="{{cookiecutter.project_description}}"
 LABEL version="1.0"
 WORKDIR /{{cookiecutter.project_slug}}
 COPY requirements.txt .
