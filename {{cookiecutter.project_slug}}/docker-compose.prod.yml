@@ -12,10 +12,10 @@ services:
     networks:
       - {{cookiecutter.project_slug}}_network
     ports:
-      - "443:443"
-      - "80:80"
+      - "8000:8000"
     environment:
       - DEBUG=False
+
       {%- if cookiecutter.database_type == "PostgreSQL" -%}
       - DB_URL=postgresql+asyncpg://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
       {%- elif cookiecutter.database_type == "SQLite" -%}
@@ -25,6 +25,7 @@ services:
       {% elif cookiecutter.database_type == "Oracle" -%}
       - DB_URL=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
       {%- endif -%}
+
       - SECRET_KEY=${SECRET_KEY}
       - OAUTH_TOKEN_SECRET=${OAUTH_TOKEN_SECRET}
       - CELERY_BROKER_URL=redis://redis:6379/0
@@ -37,6 +38,7 @@ services:
       {%- elif cookiecutter.database_type == "Oracle" -%}
       - CELERY_RESULT_BACKEND=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
       {%- endif -%}
+
       - REDIS_URL=redis://redis:6379/0
       # CORS settings
       - CORS_ALLOW_ORIGINS=${CORS_ALLOW_ORIGINS}
@@ -59,7 +61,7 @@ services:
     command: >
         bash -c "
           alembic upgrade head &&
-          uvicorn src.main:app --host 0.0.0.0 --port 443 --ssl-keyfile=${HTTPS_KEY_FILE} --ssl-certfile=${HTTPS_CERT_FILE}
+          uvicorn src.main:app --host 0.0.0.0 --port 8000
         "
   celery_worker:
     build:
@@ -75,6 +77,7 @@ services:
       - {{cookiecutter.project_slug}}_network
     environment:
       - DEBUG=False
+
       {%- if cookiecutter.database_type == "PostgreSQL" -%}
       - DB_URL=postgresql+asyncpg://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
       {%- elif cookiecutter.database_type == "SQLite" -%}
@@ -84,9 +87,11 @@ services:
       {%- elif cookiecutter.database_type == "Oracle" -%}
       - DB_URL=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
       {%- endif -%}
+
       - SECRET_KEY=${SECRET_KEY}
       - OAUTH_TOKEN_SECRET=${OAUTH_TOKEN_SECRET}
       - CELERY_BROKER_URL=redis://redis:6379/0
+
       {%- if cookiecutter.database_type == "PostgreSQL" -%}
       - CELERY_RESULT_BACKEND=db+postgresql://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
       {%- elif cookiecutter.database_type == "SQLite" -%}
@@ -96,6 +101,7 @@ services:
       {%- elif cookiecutter.database_type == "Oracle" -%}
       - CELERY_RESULT_BACKEND=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
       {%- endif -%}
+
       - REDIS_URL=redis://redis:6379/0
     command: celery -A src.celery:celery_app worker --loglevel=info
     restart: unless-stopped
@@ -114,6 +120,7 @@ services:
       - {{cookiecutter.project_slug}}_network
     environment:
       - DEBUG=False
+
       {%- if cookiecutter.database_type == "PostgreSQL" -%}
       - DB_URL=postgresql+asyncpg://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:5432/{{cookiecutter.project_slug}}
       {%- elif cookiecutter.database_type == "SQLite" -%}
@@ -123,6 +130,7 @@ services:
       {%- elif cookiecutter.database_type == "Oracle" -%}
       - DB_URL=oracle+oracledb://{{cookiecutter.database_user}}:{{cookiecutter.database_password}}@db:1521/{{cookiecutter.project_slug}}
       {%- endif -%}
+
       - SECRET_KEY=${SECRET_KEY}
       - OAUTH_TOKEN_SECRET=${OAUTH_TOKEN_SECRET}
       - CELERY_BROKER_URL=redis://redis:6379/0
@@ -164,6 +172,8 @@ services:
     networks:
       - {{cookiecutter.project_slug}}_network
     restart: unless-stopped
+
+
   {%- if cookiecutter.database_type == "MySQL" -%}
   db:
     image: mariadb:latest
