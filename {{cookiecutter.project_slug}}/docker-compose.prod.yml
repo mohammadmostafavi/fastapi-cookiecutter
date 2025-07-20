@@ -36,8 +36,6 @@ services:
       - CORS_ALLOW_CREDENTIALS=True
       - CORS_ALLOW_METHODS=GET,POST,PUT,DELETE,OPTIONS,PATCH
       - CORS_ALLOW_HEADERS=Authorization,Content-Type,Accept
-      # Security headers settings
-      - HSTS_MAX_AGE=31536000
       # CSP settings
       - CSP_ENABLED=True
       - CSP_DEFAULT_SRC='self'

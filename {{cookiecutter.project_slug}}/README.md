@@ -72,21 +72,6 @@ CORS_EXPOSE_HEADERS=
 CORS_MAX_AGE=600
 ```
 
-### Security Headers
-
-The application sets various security headers to protect against common web vulnerabilities:
-
-- **X-Content-Type-Options**: Prevents MIME type sniffing
-- **X-Frame-Options**: Protects against clickjacking
-- **X-XSS-Protection**: Helps prevent cross-site scripting attacks
-- **Strict-Transport-Security**: Enforces HTTPS usage
-- **Referrer-Policy**: Controls referrer information
-
-Configuration options:
-```
-HSTS_MAX_AGE=31536000  # 1 year in seconds
-```
-
 ### Content Security Policy
 
 Content Security Policy (CSP) is implemented to prevent cross-site scripting and other code injection attacks:
