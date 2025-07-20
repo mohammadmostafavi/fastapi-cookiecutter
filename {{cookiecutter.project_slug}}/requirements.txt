@@ -5,16 +5,16 @@ sqlalchemy[asyncio]
 alembic
 pydantic
 pydantic-settings
-{%- if cookiecutter.database_type == "PostgreSQL" -%}
+{% if cookiecutter.database_type == "PostgreSQL" %}
 asyncpg
 psycopg2
-{%- elif cookiecutter.database_type == "MySQL" -%}
+{% elif cookiecutter.database_type == "MySQL" %}
 aiomysql
-{%- elif cookiecutter.database_type == "SQLite" -%}
+{% elif cookiecutter.database_type == "SQLite" %}
 aiosqlite
-{% elif cookiecutter.database_type == "Oracle" -%}
+{% elif cookiecutter.database_type == "Oracle" %}
 oracledb
-{%- endif -%}
+{% endif %}
 pyjwt
 celery
 redis
