@@ -19,7 +19,8 @@ def delete_resource(resource):
 if licence == "None":
     delete_resource("LICENSE")
 
-if use_celery == "n":
+
+if not use_celery:
     delete_resource("{{cookiecutter.project_slug}}/src/celery.py")
     delete_resource("{{cookiecutter.project_slug}}/apps/user/tasks.py")
     delete_resource("{{cookiecutter.project_slug}}/apps/logs/tasks.py")

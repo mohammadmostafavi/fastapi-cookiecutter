@@ -5,7 +5,7 @@ services:
       - redis_data:/data
     networks:
       - {{cookiecutter.project_slug}}_network
-  { % if cookiecutter.database_type == "MySQL" % }
+  {% if cookiecutter.database_type == "MySQL" %}
   db:
     image: mariadb:latest
     environment:
@@ -17,7 +17,7 @@ services:
       - db_data:/var/lib/mysql
     networks:
       - {{cookiecutter.project_slug}}_network
-  { % elif cookiecutter.database_type == "PostgreSQL" % }
+  {% elif cookiecutter.database_type == "PostgreSQL" %}
   db:
     image: postgres:latest
     environment:
@@ -28,7 +28,7 @@ services:
       - db_data:/var/lib/postgresql/data
     networks:
       - {{cookiecutter.project_slug}}_network
-  { % endif % }
+  {% endif %}
   {{cookiecutter.project_slug}}:
     build:
       context: .
