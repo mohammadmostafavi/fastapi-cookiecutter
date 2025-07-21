@@ -1,4 +1,34 @@
 services:
+  redis:
+    image: redis:latest
+    volumes:
+      - redis_data:/data
+    networks:
+      - {{cookiecutter.project_slug}}_network
+  { % if cookiecutter.database_type == "MySQL" % }
+  db:
+    image: mariadb:latest
+    environment:
+      MYSQL_DATABASE: {{cookiecutter.project_slug}}
+      MYSQL_USER: {{cookiecutter.database_user}}
+      MYSQL_PASSWORD: {{cookiecutter.database_password}}
+      MYSQL_ROOT_PASSWORD: {{cookiecutter.database_password}}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - {{cookiecutter.project_slug}}_network
+  { % elif cookiecutter.database_type == "PostgreSQL" % }
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: {{cookiecutter.project_slug}}
+      POSTGRES_USER: {{cookiecutter.database_user}}
+      POSTGRES_PASSWORD: {{cookiecutter.database_password}}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - {{cookiecutter.project_slug}}_network
+  { % endif % }
   {{cookiecutter.project_slug}}:
     build:
       context: .
@@ -30,6 +60,7 @@ services:
           alembic upgrade head &&
           uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
         "
+  {% if cookiecutter.use_celery %}
   celery_worker:
     build:
       context: .
@@ -126,36 +157,8 @@ services:
       {% endif %}- CELERY_TASK_ALWAYS_EAGER=true
       - CELERY_TASK_EAGER_PROPAGATES_EXCEPTIONS=true
     command: celery -A src.celery:celery_app flower --port=5555
-  redis:
-    image: redis:latest
-    volumes:
-      - redis_data:/data
-    networks:
-      - {{cookiecutter.project_slug}}_network
-  {% if cookiecutter.database_type == "MySQL" %}
-  db:
-    image: mariadb:latest
-    environment:
-      MYSQL_DATABASE: {{cookiecutter.project_slug}}
-      MYSQL_USER: {{cookiecutter.database_user}}
-      MYSQL_PASSWORD: {{cookiecutter.database_password}}
-      MYSQL_ROOT_PASSWORD: {{cookiecutter.database_password}}
-    volumes:
-        - db_data:/var/lib/mysql
-    networks:
-        - {{cookiecutter.project_slug}}_network
-  {% elif cookiecutter.database_type == "PostgreSQL" %}
-  db:
-    image: postgres:latest
-    environment:
-      POSTGRES_DB: {{cookiecutter.project_slug}}
-      POSTGRES_USER: {{cookiecutter.database_user}}
-      POSTGRES_PASSWORD: {{cookiecutter.database_password}}
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    networks:
-      - {{cookiecutter.project_slug}}_network
   {% endif %}
+
 
 volumes:
   db_data:

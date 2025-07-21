@@ -1,4 +1,40 @@
 services:
+  redis:
+    image: redis:latest
+    volumes:
+      - redis_data:/data
+    networks:
+      - {{cookiecutter.project_slug}}_network
+    restart: unless-stopped
+  { % if cookiecutter.database_type == "MySQL" % }
+  db:
+    image: mariadb:latest
+    environment:
+      MYSQL_DATABASE: {{cookiecutter.project_slug}}
+      MYSQL_USER: {{cookiecutter.database_user}}
+      MYSQL_PASSWORD: {{cookiecutter.database_password}}
+      MYSQL_ROOT_PASSWORD: {{cookiecutter.database_password}}
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - {{cookiecutter.project_slug}}_network
+
+  { % elif cookiecutter.database_type == "PostgreSQL" % }
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: {{cookiecutter.project_slug}}
+      POSTGRES_USER: {{cookiecutter.database_user}}
+      POSTGRES_PASSWORD: {{cookiecutter.database_password}}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5445:5432"
+    networks:
+      - {{cookiecutter.project_slug}}_network
+  { % endif % }
   {{cookiecutter.project_slug}}:
     build:
       context: .
@@ -52,6 +88,7 @@ services:
           alembic upgrade head &&
           uvicorn src.main:app --host 0.0.0.0 --port 8000
         "
+  {% if cookiecutter.use_celery %}
   celery_worker:
     build:
       context: .
@@ -134,41 +171,6 @@ services:
       - CELERY_BROKER_URL=redis://redis:6379/0
     command: celery -A src.celery:celery_app flower --port=5555 --basic_auth=${FLOWER_USER:-admin}:${FLOWER_PASSWORD:-admin}
     restart: unless-stopped
-  redis:
-    image: redis:latest
-    volumes:
-      - redis_data:/data
-    networks:
-      - {{cookiecutter.project_slug}}_network
-    restart: unless-stopped
-  {% if cookiecutter.database_type == "MySQL" %}
-  db:
-    image: mariadb:latest
-    environment:
-      MYSQL_DATABASE: {{cookiecutter.project_slug}}
-      MYSQL_USER: {{cookiecutter.database_user}}
-      MYSQL_PASSWORD: {{cookiecutter.database_password}}
-      MYSQL_ROOT_PASSWORD: {{cookiecutter.database_password}}
-    volumes:
-      - db_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
-    networks:
-      - {{cookiecutter.project_slug}}_network
-
-  {% elif cookiecutter.database_type == "PostgreSQL" %}
-  db:
-    image: postgres:latest
-    environment:
-      POSTGRES_DB: {{cookiecutter.project_slug}}
-      POSTGRES_USER: {{cookiecutter.database_user}}
-      POSTGRES_PASSWORD: {{cookiecutter.database_password}}
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    ports:
-      - "5445:5432"
-    networks:
-      - {{cookiecutter.project_slug}}_network
   {% endif %}
 
 volumes:
