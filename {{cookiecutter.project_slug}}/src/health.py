@@ -9,6 +9,7 @@ import time
 from typing import Dict, Any, Optional
 
 from fastapi import APIRouter, Depends, status
+from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import text
 from sqlalchemy.exc import SQLAlchemyError
@@ -23,6 +24,33 @@ logger = logging.getLogger(__name__)
 
 # Create router
 health_router = APIRouter(tags=["health"])
+
+class HealthResponse(BaseModel):
+    """
+    Schema for health check response.
+    Provides information about the health of the application and its components.
+    """
+    status: str = Field(..., description="Overall health status of the application")
+    components: Dict[str, Any] = Field(
+        ..., description="Health status of individual components"
+    )
+    response_time_ms: float = Field(
+        ..., description="Response time in milliseconds"
+    )
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "status": "healthy",
+                "components": {
+                    "database": {
+                        "healthy": True,
+                        "response_time_ms": 10
+                    }
+                },
+                "response_time_ms": 15.5
+            }
+        }
 
 
 @health_router.get("/health", status_code=status.HTTP_200_OK)
